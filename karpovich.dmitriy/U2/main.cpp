@@ -1,6 +1,7 @@
 #include <cstddef>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <string>
 #include "commands.hpp"
 #include "meet.hpp"
@@ -97,19 +98,20 @@ int main(int argc, char **argv)
 
     karpovich::readMeets(dataFile, meets);
     karpovich::removeSelfMeets(meets);
+
     for (size_t i = 0; i < meets.size; ++i) {
-      if (!containsPerson(persons, meets.data[i].firstId)) {
+      if (!karpovich::containsPerson(persons, meets.data[i].firstId)) {
         karpovich::Person anon;
         anon.id = meets.data[i].firstId;
         anon.info = "";
-        pushBack(persons, anon);
+        karpovich::pushBack(persons, anon);
       }
 
-      if (!containsPerson(persons, meets.data[i].secondId)) {
+      if (!karpovich::containsPerson(persons, meets.data[i].secondId)) {
         karpovich::Person anon;
         anon.id = meets.data[i].secondId;
         anon.info = "";
-        pushBack(persons, anon);
+        karpovich::pushBack(persons, anon);
       }
     }
   } catch (const std::exception &e) {
@@ -122,7 +124,13 @@ int main(int argc, char **argv)
   std::string command;
 
   while (std::cin >> command) {
-    karpovich::processCommand(std::cin, std::cout, persons, meets, command);
+    try {
+      karpovich::processCommand(std::cin, std::cout, persons, meets, command);
+    } catch (const std::exception &) {
+      std::cout << "<INVALID COMMAND>\n";
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
+    }
   }
 
   karpovich::destroyVector(persons);

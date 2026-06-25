@@ -34,6 +34,36 @@ namespace
       }
     }
   }
+
+  size_t readSizeT(std::istream &input)
+  {
+    size_t value = 0;
+    input >> value;
+
+    if (input.fail()) {
+      throw std::runtime_error("Invalid input");
+    }
+
+    return value;
+  }
+
+  std::string readQuotedString(std::istream &input)
+  {
+    char quote = 0;
+    input >> quote;
+
+    if (input.fail() || quote != '"') {
+      throw std::runtime_error("Invalid input");
+    }
+
+    std::string result;
+
+    if (!std::getline(input, result, '"')) {
+      throw std::runtime_error("Invalid input");
+    }
+
+    return result;
+  }
 }
 
 void karpovich::readMeets(std::istream &input, Vector< Meet > &meets)
@@ -136,30 +166,21 @@ void karpovich::cmdAnons(std::istream &, std::ostream &output, Vector< Person > 
   destroyVector(anons);
 }
 
-void karpovich::cmdDeanon(std::istream &input, std::ostream &output, Vector< Person > &persons, Vector< Meet > &meets)
+void karpovich::cmdDeanon(std::istream &input, std::ostream &, Vector< Person > &persons, Vector< Meet > &meets)
 {
-  size_t anonId = 0;
-  size_t id = 0;
-
-  input >> anonId >> id;
-
-  if (!input) {
-    output << "<INVALID COMMAND>\n";
-    return;
-  }
+  size_t anonId = readSizeT(input);
+  size_t id = readSizeT(input);
 
   const Person *anon = findPersonById(persons, anonId);
 
   if (anon == nullptr || !anon->info.empty()) {
-    output << "<INVALID COMMAND>\n";
-    return;
+    throw std::runtime_error("Invalid deanon");
   }
 
   const Person *target = findPersonById(persons, id);
 
   if (target == nullptr || target->info.empty()) {
-    output << "<INVALID COMMAND>\n";
-    return;
+    throw std::runtime_error("Invalid deanon");
   }
 
   for (size_t i = 0; i < meets.size; ++i) {
@@ -187,37 +208,15 @@ void karpovich::cmdDeanon(std::istream &input, std::ostream &output, Vector< Per
   removeSelfMeets(meets);
 }
 
-void karpovich::cmdRedesc(std::istream &input, std::ostream &output, Vector< Person > &persons, Vector< Meet > &)
+void karpovich::cmdRedesc(std::istream &input, std::ostream &, Vector< Person > &persons, Vector< Meet > &)
 {
-  size_t id = 0;
-
-  input >> id;
-
-  if (!input) {
-    output << "<INVALID COMMAND>\n";
-    return;
-  }
-
-  char quote = 0;
-  input >> quote;
-
-  if (quote != '"') {
-    output << "<INVALID COMMAND>\n";
-    return;
-  }
-
-  std::string description;
-
-  if (!std::getline(input, description, '"')) {
-    output << "<INVALID COMMAND>\n";
-    return;
-  }
+  size_t id = readSizeT(input);
+  std::string description = readQuotedString(input);
 
   Person *person = findPersonById(persons, id);
 
   if (person == nullptr) {
-    output << "<INVALID COMMAND>\n";
-    return;
+    throw std::runtime_error("Invalid redesc");
   }
 
   person->info = description;
@@ -225,20 +224,12 @@ void karpovich::cmdRedesc(std::istream &input, std::ostream &output, Vector< Per
 
 void karpovich::cmdDesc(std::istream &input, std::ostream &output, Vector< Person > &persons, Vector< Meet > &)
 {
-  size_t id = 0;
-
-  input >> id;
-
-  if (!input) {
-    output << "<INVALID COMMAND>\n";
-    return;
-  }
+  size_t id = readSizeT(input);
 
   const Person *person = findPersonById(persons, id);
 
   if (person == nullptr) {
-    output << "<INVALID COMMAND>\n";
-    return;
+    throw std::runtime_error("Invalid desc");
   }
 
   if (person->info.empty()) {
@@ -247,16 +238,10 @@ void karpovich::cmdDesc(std::istream &input, std::ostream &output, Vector< Perso
     output << person->info << '\n';
   }
 }
+
 void karpovich::cmdMeets(std::istream &input, std::ostream &output, Vector< Person > &, Vector< Meet > &meets)
 {
-  size_t id = 0;
-
-  input >> id;
-
-  if (!input) {
-    output << "<INVALID COMMAND>\n";
-    return;
-  }
+  size_t id = readSizeT(input);
 
   Vector< MeetKey > result;
   initVector(result);
@@ -286,15 +271,8 @@ void karpovich::cmdMeets(std::istream &input, std::ostream &output, Vector< Pers
 
 void karpovich::cmdCommons(std::istream &input, std::ostream &output, Vector< Person > &, Vector< Meet > &meets)
 {
-  size_t id1 = 0;
-  size_t id2 = 0;
-
-  input >> id1 >> id2;
-
-  if (!input) {
-    output << "<INVALID COMMAND>\n";
-    return;
-  }
+  size_t id1 = readSizeT(input);
+  size_t id2 = readSizeT(input);
 
   Vector< size_t > contacts1;
   Vector< size_t > contacts2;
@@ -365,15 +343,8 @@ void karpovich::cmdCommons(std::istream &input, std::ostream &output, Vector< Pe
 
 void karpovich::cmdLess(std::istream &input, std::ostream &output, Vector< Person > &, Vector< Meet > &meets)
 {
-  size_t time = 0;
-  size_t id = 0;
-
-  input >> time >> id;
-
-  if (!input) {
-    output << "<INVALID COMMAND>\n";
-    return;
-  }
+  size_t time = readSizeT(input);
+  size_t id = readSizeT(input);
 
   Vector< MeetKey > result;
   initVector(result);
@@ -403,15 +374,8 @@ void karpovich::cmdLess(std::istream &input, std::ostream &output, Vector< Perso
 
 void karpovich::cmdGreater(std::istream &input, std::ostream &output, Vector< Person > &, Vector< Meet > &meets)
 {
-  size_t time = 0;
-  size_t id = 0;
-
-  input >> time >> id;
-
-  if (!input) {
-    output << "<INVALID COMMAND>\n";
-    return;
-  }
+  size_t time = readSizeT(input);
+  size_t id = readSizeT(input);
 
   Vector< MeetKey > result;
   initVector(result);
@@ -439,34 +403,24 @@ void karpovich::cmdGreater(std::istream &input, std::ostream &output, Vector< Pe
   destroyVector(result);
 }
 
-void karpovich::cmdOutPersons(std::istream &input, std::ostream &output, Vector< Person > &persons, Vector< Meet > &)
+void karpovich::cmdOutPersons(std::istream &input, std::ostream &, Vector< Person > &persons, Vector< Meet > &)
 {
   std::string filename;
-
   input >> filename;
 
-  if (!input) {
-    output << "<INVALID COMMAND>\n";
-    return;
+  if (input.fail()) {
+    throw std::runtime_error("Invalid input");
   }
 
   std::ofstream outputFile(filename);
 
   if (!outputFile.is_open()) {
-    output << "<INVALID COMMAND>\n";
-    return;
+    throw std::runtime_error("Cannot open file");
   }
-
-  Vector< Person > withDescription;
-  initVector(withDescription);
 
   for (size_t i = 0; i < persons.size; ++i) {
     if (!persons.data[i].info.empty()) {
-      pushBack(withDescription, persons.data[i]);
+      outputFile << persons.data[i].id << ' ' << persons.data[i].info << '\n';
     }
   }
-
-  writePersons(outputFile, withDescription);
-
-  destroyVector(withDescription);
 }
