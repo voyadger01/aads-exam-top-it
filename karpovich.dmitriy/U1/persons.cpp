@@ -60,8 +60,3 @@ void karpovich::writePersons(std::ostream &output, const Vector< Person > &perso
     output << persons.data[i].id << ' ' << persons.data[i].info << '\n';
   }
 }
-
-void karpovich::writeStatistics(std::ostream &output, size_t validCount, size_t ignoredCount)
-{
-  output << validCount << ' ' << ignoredCount << '\n';
-}

@@ -7,6 +7,9 @@
 
 int main(int argc, char **argv)
 {
+  if (argc > 3) {
+    return 1;
+  }
   bool hasInputFile = false;
   bool hasOutputFile = false;
 
@@ -15,13 +18,13 @@ int main(int argc, char **argv)
 
   for (int i = 1; i < argc; ++i) {
     std::string argument = argv[i];
-    if (argument.substr(0, 3) == "in:") {
+    if (argument.compare(0, 3, "in:") == 0) {
       if (hasInputFile) {
         return 1;
       }
       hasInputFile = true;
       inputFileName = argument.substr(3);
-    } else if (argument.substr(0, 4) == "out:") {
+    } else if (argument.compare(0, 4, "out:") == 0) {
       if (hasOutputFile) {
         return 1;
       }
@@ -31,41 +34,44 @@ int main(int argc, char **argv)
       return 1;
     }
   }
-  if (argc > 3) {
-    return 1;
-  }
-  std::ifstream inputFile;
-  std::ofstream outputFile;
-  std::istream *input = &std::cin;
-  std::ostream *output = &std::cout;
-  if (hasInputFile) {
-    inputFile.open(inputFileName);
-    if (!inputFile) {
-      return 2;
-    }
-    input = &inputFile;
-  }
-  if (hasOutputFile) {
-    outputFile.open(outputFileName);
-    if (!outputFile) {
-      return 2;
-    }
-    output = &outputFile;
-  }
+
   karpovich::Vector< karpovich::Person > persons;
   karpovich::initVector(persons);
-  size_t validCount = 0;
-  size_t ignoredCount = 0;
+
   try {
-    karpovich::readPersons(*input, persons, validCount, ignoredCount);
-    karpovich::writePersons(*output, persons);
-    karpovich::writeStatistics(std::cerr, validCount, ignoredCount);
+    size_t validCount = 0;
+    size_t ignoredCount = 0;
+    if (hasInputFile) {
+      std::ifstream input(inputFileName);
+      if (!input) {
+        karpovich::destroyVector(persons);
+        return 2;
+      }
+      karpovich::readPersons(input, persons, validCount, ignoredCount);
+    } else {
+      karpovich::readPersons(std::cin, persons, validCount, ignoredCount);
+    }
+    if (hasOutputFile) {
+      {
+        std::ofstream output(outputFileName);
+        if (!output) {
+          karpovich::destroyVector(persons);
+          return 2;
+        }
+        karpovich::writePersons(output, persons);
+      }
+      std::cout << "in file " << outputFileName << '\n';
+      std::ifstream result(outputFileName);
+      std::string line;
+      while (std::getline(result, line)) {
+        std::cout << line << '\n';
+      }
+    } else {
+      karpovich::writePersons(std::cout, persons);
+    }
   } catch (...) {
     karpovich::destroyVector(persons);
     return 2;
   }
-
   karpovich::destroyVector(persons);
-
-  return 0;
 }

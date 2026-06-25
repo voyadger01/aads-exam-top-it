@@ -11,7 +11,6 @@ namespace karpovich
   void readPersons(std::istream &input, Vector< Person > &persons, size_t &validCount, size_t &ignoredCount);
   bool containsPerson(const Vector< Person > &persons, size_t id);
   void writePersons(std::ostream &output, const Vector< Person > &persons);
-  void writeStatistics(std::ostream &output, size_t validCount, size_t ignoredCount);
 }
 
 #endif
