@@ -3,12 +3,14 @@
 
 #include <cstddef>
 #include <iosfwd>
-#include "person_array.hpp"
+#include "person.hpp"
+#include "vector.hpp"
 
 namespace karpovich
 {
-  bool readPersons(std::istream &input, PersonArray &persons, size_t &validCount, size_t &ignoredCount);
-  void writePersons(std::ostream &output, const PersonArray &persons);
+  bool readPersons(std::istream &input, Vector< Person > &persons, size_t &validCount, size_t &ignoredCount);
+  bool containsPerson(const Vector< Person > &persons, size_t id);
+  void writePersons(std::ostream &output, const Vector< Person > &persons);
   void writeStatistics(std::ostream &output, size_t validCount, size_t ignoredCount);
 }
 

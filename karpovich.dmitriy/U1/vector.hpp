@@ -1,5 +1,5 @@
-#ifndef KARPOVICH_VECTOR_HPP
-#define KARPOVICH_VECTOR_HPP
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
 
 #include <cstddef>
 
