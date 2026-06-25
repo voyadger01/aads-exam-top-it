@@ -34,11 +34,6 @@ namespace
       }
     }
   }
-
-  void printInvalidCommand(std::ostream &output)
-  {
-    output << "<INVALID COMMAND>\n";
-  }
 }
 
 void karpovich::readMeets(std::istream &input, Vector< Meet > &meets)
