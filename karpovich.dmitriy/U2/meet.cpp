@@ -149,7 +149,7 @@ void karpovich::cmdDeanon(std::istream &input, std::ostream &output, Vector< Per
   input >> anonId >> id;
 
   if (!input) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
     return;
   }
 
@@ -157,14 +157,14 @@ void karpovich::cmdDeanon(std::istream &input, std::ostream &output, Vector< Per
     const Person *anon = findPersonById(persons, anonId);
 
     if (anon == nullptr || !anon->info.empty()) {
-      printInvalidCommand(output);
+      output << "<INVALID COMMAND>\n";
       return;
     }
 
     const Person *target = findPersonById(persons, id);
 
     if (target == nullptr || target->info.empty()) {
-      printInvalidCommand(output);
+      output << "<INVALID COMMAND>\n";
       return;
     }
 
@@ -191,7 +191,7 @@ void karpovich::cmdDeanon(std::istream &input, std::ostream &output, Vector< Per
 
     removeSelfMeets(meets);
   } catch (...) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
   }
 }
 
@@ -203,7 +203,7 @@ void karpovich::cmdRedesc(std::istream &input, std::ostream &output, Vector< Per
   input >> id;
 
   if (!input) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
     return;
   }
 
@@ -211,14 +211,14 @@ void karpovich::cmdRedesc(std::istream &input, std::ostream &output, Vector< Per
   input >> quote;
 
   if (quote != '"') {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
     return;
   }
 
   std::getline(input, description, '"');
 
   if (!input) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
     return;
   }
 
@@ -226,13 +226,13 @@ void karpovich::cmdRedesc(std::istream &input, std::ostream &output, Vector< Per
     Person *person = findPersonById(persons, id);
 
     if (person == nullptr) {
-      printInvalidCommand(output);
+      output << "<INVALID COMMAND>\n";
       return;
     }
 
     person->info = description;
   } catch (...) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
   }
 }
 
@@ -243,7 +243,7 @@ void karpovich::cmdDesc(std::istream &input, std::ostream &output, Vector< Perso
   input >> id;
 
   if (!input) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
     return;
   }
 
@@ -251,7 +251,7 @@ void karpovich::cmdDesc(std::istream &input, std::ostream &output, Vector< Perso
     const Person *person = findPersonById(persons, id);
 
     if (person == nullptr) {
-      printInvalidCommand(output);
+      output << "<INVALID COMMAND>\n";
       return;
     }
 
@@ -261,7 +261,7 @@ void karpovich::cmdDesc(std::istream &input, std::ostream &output, Vector< Perso
       output << person->info << '\n';
     }
   } catch (...) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
   }
 }
 
@@ -272,7 +272,7 @@ void karpovich::cmdMeets(std::istream &input, std::ostream &output, Vector< Pers
   input >> id;
 
   if (!input) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
     return;
   }
 
@@ -310,7 +310,7 @@ void karpovich::cmdCommons(std::istream &input, std::ostream &output, Vector< Pe
   input >> id1 >> id2;
 
   if (!input) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
     return;
   }
 
@@ -389,7 +389,7 @@ void karpovich::cmdLess(std::istream &input, std::ostream &output, Vector< Perso
   input >> time >> id;
 
   if (!input) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
     return;
   }
 
@@ -427,7 +427,7 @@ void karpovich::cmdGreater(std::istream &input, std::ostream &output, Vector< Pe
   input >> time >> id;
 
   if (!input) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
     return;
   }
 
@@ -464,14 +464,14 @@ void karpovich::cmdOutPersons(std::istream &input, std::ostream &output, Vector<
   input >> filename;
 
   if (!input) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
     return;
   }
 
   std::ofstream outputFile(filename);
 
   if (!outputFile.is_open()) {
-    printInvalidCommand(output);
+    output << "<INVALID COMMAND>\n";
     return;
   }
 
