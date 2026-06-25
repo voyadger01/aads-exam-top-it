@@ -97,6 +97,21 @@ int main(int argc, char **argv)
 
     karpovich::readMeets(dataFile, meets);
     karpovich::removeSelfMeets(meets);
+    for (size_t i = 0; i < meets.size; ++i) {
+      if (!containsPerson(persons, meets.data[i].firstId)) {
+        karpovich::Person anon;
+        anon.id = meets.data[i].firstId;
+        anon.info = "";
+        pushBack(persons, anon);
+      }
+
+      if (!containsPerson(persons, meets.data[i].secondId)) {
+        karpovich::Person anon;
+        anon.id = meets.data[i].secondId;
+        anon.info = "";
+        pushBack(persons, anon);
+      }
+    }
   } catch (const std::exception &e) {
     std::cerr << e.what() << '\n';
     karpovich::destroyVector(persons);

@@ -12,10 +12,11 @@ namespace
                     karpovich::Vector< karpovich::Meet > &meets);
   };
 
-  const Command COMMANDS[] = {
-      {"anons", karpovich::cmdAnons}, {"deanon", karpovich::cmdDeanon},   {"redesc", karpovich::cmdRedesc},
-      {"desc", karpovich::cmdDesc},   {"meets", karpovich::cmdMeets},     {"commons", karpovich::cmdCommons},
-      {"less", karpovich::cmdLess},   {"greater", karpovich::cmdGreater}, {"out-persons", karpovich::cmdOutPersons}};
+  const Command COMMANDS[] = {{"anons", karpovich::cmdAnons},     {"deanon", karpovich::cmdDeanon},
+                              {"redesc", karpovich::cmdRedesc},   {"desc", karpovich::cmdDesc},
+                              {"meet", karpovich::cmdMeets},      {"meets", karpovich::cmdMeets},
+                              {"commons", karpovich::cmdCommons}, {"less", karpovich::cmdLess},
+                              {"greater", karpovich::cmdGreater}, {"out-persons", karpovich::cmdOutPersons}};
 
   const size_t COMMANDS_COUNT = sizeof(COMMANDS) / sizeof(COMMANDS[0]);
 }

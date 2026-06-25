@@ -1,9 +1,9 @@
+#include "meets.hpp"
 #include <fstream>
 #include <istream>
 #include <ostream>
 #include <stdexcept>
 #include <string>
-#include "meets.hpp"
 
 namespace
 {
@@ -148,52 +148,48 @@ void karpovich::cmdDeanon(std::istream &input, std::ostream &output, Vector< Per
     return;
   }
 
-  try {
-    const Person *anon = findPersonById(persons, anonId);
+  const Person *anon = findPersonById(persons, anonId);
 
-    if (anon == nullptr || !anon->info.empty()) {
-      output << "<INVALID COMMAND>\n";
-      return;
-    }
-
-    const Person *target = findPersonById(persons, id);
-
-    if (target == nullptr || target->info.empty()) {
-      output << "<INVALID COMMAND>\n";
-      return;
-    }
-
-    for (size_t i = 0; i < meets.size; ++i) {
-      if (meets.data[i].firstId == anonId) {
-        meets.data[i].firstId = id;
-      }
-
-      if (meets.data[i].secondId == anonId) {
-        meets.data[i].secondId = id;
-      }
-    }
-
-    for (size_t i = 0; i < persons.size; ++i) {
-      if (persons.data[i].id == anonId) {
-        for (size_t j = i; j + 1 < persons.size; ++j) {
-          persons.data[j] = persons.data[j + 1];
-        }
-
-        --persons.size;
-        break;
-      }
-    }
-
-    removeSelfMeets(meets);
-  } catch (...) {
+  if (anon == nullptr || !anon->info.empty()) {
     output << "<INVALID COMMAND>\n";
+    return;
   }
+
+  const Person *target = findPersonById(persons, id);
+
+  if (target == nullptr || target->info.empty()) {
+    output << "<INVALID COMMAND>\n";
+    return;
+  }
+
+  for (size_t i = 0; i < meets.size; ++i) {
+    if (meets.data[i].firstId == anonId) {
+      meets.data[i].firstId = id;
+    }
+
+    if (meets.data[i].secondId == anonId) {
+      meets.data[i].secondId = id;
+    }
+  }
+
+  Vector< Person > newPersons;
+  initVector(newPersons);
+
+  for (size_t i = 0; i < persons.size; ++i) {
+    if (persons.data[i].id != anonId) {
+      pushBack(newPersons, persons.data[i]);
+    }
+  }
+
+  destroyVector(persons);
+  persons = newPersons;
+
+  removeSelfMeets(meets);
 }
 
 void karpovich::cmdRedesc(std::istream &input, std::ostream &output, Vector< Person > &persons, Vector< Meet > &)
 {
   size_t id = 0;
-  std::string description;
 
   input >> id;
 
@@ -210,25 +206,21 @@ void karpovich::cmdRedesc(std::istream &input, std::ostream &output, Vector< Per
     return;
   }
 
-  std::getline(input, description, '"');
+  std::string description;
 
-  if (!input) {
+  if (!std::getline(input, description, '"')) {
     output << "<INVALID COMMAND>\n";
     return;
   }
 
-  try {
-    Person *person = findPersonById(persons, id);
+  Person *person = findPersonById(persons, id);
 
-    if (person == nullptr) {
-      output << "<INVALID COMMAND>\n";
-      return;
-    }
-
-    person->info = description;
-  } catch (...) {
+  if (person == nullptr) {
     output << "<INVALID COMMAND>\n";
+    return;
   }
+
+  person->info = description;
 }
 
 void karpovich::cmdDesc(std::istream &input, std::ostream &output, Vector< Person > &persons, Vector< Meet > &)
@@ -242,24 +234,19 @@ void karpovich::cmdDesc(std::istream &input, std::ostream &output, Vector< Perso
     return;
   }
 
-  try {
-    const Person *person = findPersonById(persons, id);
+  const Person *person = findPersonById(persons, id);
 
-    if (person == nullptr) {
-      output << "<INVALID COMMAND>\n";
-      return;
-    }
-
-    if (person->info.empty()) {
-      output << "<ANON>\n";
-    } else {
-      output << person->info << '\n';
-    }
-  } catch (...) {
+  if (person == nullptr) {
     output << "<INVALID COMMAND>\n";
+    return;
+  }
+
+  if (person->info.empty()) {
+    output << "<ANON>\n";
+  } else {
+    output << person->info << '\n';
   }
 }
-
 void karpovich::cmdMeets(std::istream &input, std::ostream &output, Vector< Person > &, Vector< Meet > &meets)
 {
   size_t id = 0;
