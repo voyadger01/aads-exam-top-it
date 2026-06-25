@@ -1,5 +1,5 @@
-#ifndef KARPOVICH_IO_HPP
-#define KARPOVICH_IO_HPP
+#ifndef IO_HPP
+#define IO_HPP
 
 #include <cstddef>
 #include <iosfwd>
