@@ -35,15 +35,6 @@ namespace
     }
   }
 
-  void skipRestOfLine(std::istream &input)
-  {
-    while (input.get() != '\n') {
-      if (!input) {
-        break;
-      }
-    }
-  }
-
   void printInvalidCommand(std::ostream &output)
   {
     output << "<INVALID COMMAND>\n";
