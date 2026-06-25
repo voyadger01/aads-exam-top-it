@@ -190,3 +190,29 @@ void karpovich::deanon(Vector< Person > &persons, Vector< Meet > &meets, size_t 
   }
   removeSelfMeets(meets);
 }
+
+oid karpovich::redesc(Vector< Person > &persons, size_t id, const std::string &description)
+{
+  Person *person = findPersonById(persons, id);
+
+  if (person == nullptr) {
+    throw std::runtime_error("Invalid redesc");
+  }
+
+  person->info = description;
+}
+
+void karpovich::desc(std::ostream &output, const Vector< Person > &persons, size_t id)
+{
+  const Person *person = findPersonById(persons, id);
+
+  if (person == nullptr) {
+    throw std::runtime_error("Invalid desc");
+  }
+
+  if (person->info.empty()) {
+    output << "<ANON>\n";
+  } else {
+    output << person->info << '\n';
+  }
+}
