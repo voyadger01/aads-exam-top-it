@@ -60,3 +60,18 @@ void karpovich::readMeets(std::istream &input, Vector< Meet > &meets)
     pushBack(meets, meet);
   }
 }
+
+void karpovich::removeSelfMeets(Vector< Meet > &meets)
+{
+  Vector< Meet > filtered;
+  initVector(filtered);
+  for (size_t i = 0; i < meets.size; ++i)
+  {
+    if (meets.data[i].firstId != meets.data[i].secondId)
+    {
+      pushBack(filtered, meets.data[i]);
+    }
+  }
+  destroyVector(meets);
+  meets = filtered;
+}
