@@ -69,3 +69,25 @@ void karpovich::writePersons(std::ostream &output, const Vector< Person > &perso
     output << '\n';
   }
 }
+
+karpovich::Person *karpovich::findPersonById(Vector< Person > &persons, size_t id)
+{
+  for (size_t i = 0; i < persons.size; ++i) {
+    if (persons.data[i].id == id) {
+      return persons.data + i;
+    }
+  }
+
+  return nullptr;
+}
+
+const karpovich::Person *karpovich::findPersonById(const Vector< Person > &persons, size_t id)
+{
+  for (size_t i = 0; i < persons.size; ++i) {
+    if (persons.data[i].id == id) {
+      return persons.data + i;
+    }
+  }
+
+  return nullptr;
+}
