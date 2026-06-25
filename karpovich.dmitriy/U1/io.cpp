@@ -3,6 +3,16 @@
 #include <ostream>
 #include <string>
 
+bool karpovich::containsPerson(const Vector< Person > &persons, size_t id)
+{
+  for (size_t i = 0; i < persons.size; ++i) {
+    if (persons.data[i].id == id) {
+      return true;
+    }
+  }
+  return false;
+}
+
 void karpovich::writePersons(std::ostream &output, const Vector< Person > &persons)
 {
   for (size_t i = 0; i < persons.size; ++i) {
